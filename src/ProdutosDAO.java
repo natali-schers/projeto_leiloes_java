@@ -24,7 +24,7 @@ public class ProdutosDAO {
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
 
-    public void cadastrarProduto (ProdutosDTO produto){    
+    public boolean cadastrarProduto (ProdutosDTO produto){    
         conn = new conectaDAO().connectDB();
         PreparedStatement pst = null;
         
@@ -35,10 +35,14 @@ public class ProdutosDAO {
             pst.setString(2, produto.getValor().toString());
             pst.setString(3, produto.getStatus());
             pst.executeUpdate();
+            
+            return true;
         } catch (DataTruncation dt) {
             System.out.println("Falha ao cadastrar usuário: Dados muito longos para a coluna.");
+            return false;
         } catch (SQLException ex) {
             System.out.println("Falha ao cadastrar usuário " + ex.getMessage());
+            return false;
         } finally {
             try {
                 if (pst != null) {
