@@ -57,7 +57,7 @@ public class ProdutosDAO {
         }
     }
     
-    public ArrayList<ProdutosDTO> listarProdutos(){
+    public ArrayList<ProdutosDTO> listarProdutos(String statusProduto){
         PreparedStatement pst = null;
         ResultSet rs = null;
         ArrayList<ProdutosDTO> produtos = new ArrayList<>();
@@ -65,7 +65,15 @@ public class ProdutosDAO {
         
         try {
             String query = "SELECT * FROM produtos";
-            pst = conn.prepareStatement(query);
+            
+            if (statusProduto != null) {
+                query += " WHERE status = ?";
+                pst = conn.prepareStatement(query);
+                pst.setString(1, statusProduto);
+            } else {
+                pst = conn.prepareStatement(query);
+            }
+            
             rs = pst.executeQuery();
 
             while (rs.next()) {
@@ -96,5 +104,34 @@ public class ProdutosDAO {
                 System.out.println("Erro ao fechar recursos " + e.getMessage());
             }
         }
-    }           
+    }    
+    
+    public boolean venderProduto(int idProduto) {
+        conn = new conectaDAO().connectDB();
+        PreparedStatement pst = null;
+        
+        try {
+           String query = "UPDATE produtos SET status = 'Vendido' WHERE id = ?"; 
+           pst = conn.prepareStatement(query);
+           pst.setInt(1, idProduto);
+           int rowsAffected = pst.executeUpdate();
+           
+           return rowsAffected > 0;
+           
+        } catch(SQLException ex) {
+            System.out.println("Erro ao vender produto " + ex.getMessage());
+            return false;
+        } finally {
+            try {
+                if (pst != null) {
+                    pst.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Erro ao fechar recursos " + e.getMessage());
+            }
+        }
+    }
 }
