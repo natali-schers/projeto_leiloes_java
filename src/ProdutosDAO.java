@@ -57,7 +57,7 @@ public class ProdutosDAO {
         }
     }
     
-    public ArrayList<ProdutosDTO> listarProdutos(){
+    public ArrayList<ProdutosDTO> listarProdutos(String statusProduto){
         PreparedStatement pst = null;
         ResultSet rs = null;
         ArrayList<ProdutosDTO> produtos = new ArrayList<>();
@@ -65,7 +65,15 @@ public class ProdutosDAO {
         
         try {
             String query = "SELECT * FROM produtos";
-            pst = conn.prepareStatement(query);
+            
+            if (statusProduto != null) {
+                query += " WHERE status = ?";
+                pst = conn.prepareStatement(query);
+                pst.setString(1, statusProduto);
+            } else {
+                pst = conn.prepareStatement(query);
+            }
+            
             rs = pst.executeQuery();
 
             while (rs.next()) {

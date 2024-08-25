@@ -1,7 +1,3 @@
-
-import java.util.ArrayList;
-import javax.swing.table.DefaultTableModel;
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -40,7 +36,17 @@ public class listagemVendasVIEW extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Lucida Fax", 0, 18)); // NOI18N
         jLabel1.setText("Lista de Vendas");
 
-        tableVendas.setModel(listarProdutosVendidos());
+        tableVendas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
         jScrollPane1.setViewportView(tableVendas);
 
         btnVoltar.setText("Voltar");
@@ -145,29 +151,4 @@ public class listagemVendasVIEW extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableVendas;
     // End of variables declaration//GEN-END:variables
-
-    private DefaultTableModel listarProdutosVendidos() {
-        try {
-            ProdutosDAO produtosdao = new ProdutosDAO();
-            String[] colunas = {"Id", "Nome", "Valor", "Status"};
-
-            DefaultTableModel model = new DefaultTableModel(colunas, 0);
-
-            ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutos("Vendido");
-
-            for (ProdutosDTO produto : listagem) {
-                model.addRow(new Object[]{
-                    produto.getId(),
-                    produto.getNome(),
-                    produto.getValor(),
-                    produto.getStatus()
-                });
-            }
-
-            return model;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
