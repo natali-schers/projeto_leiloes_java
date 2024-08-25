@@ -13,6 +13,16 @@ public class ProdutosDTO {
     private Integer valor;
     private String status;
 
+    public ProdutosDTO() {
+    }
+    
+    public ProdutosDTO(Integer id, String nome, Integer valor, String status) {
+        this.id = id;
+        this.nome = nome;
+        this.valor = valor;
+        this.status = status;
+    }
+    
     public Integer getId() {
         return id;
     }

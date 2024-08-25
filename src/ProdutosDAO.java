@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ProdutosDAO {   
@@ -23,7 +24,6 @@ public class ProdutosDAO {
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
-
     public boolean cadastrarProduto (ProdutosDTO produto){    
         conn = new conectaDAO().connectDB();
         PreparedStatement pst = null;
@@ -58,12 +58,43 @@ public class ProdutosDAO {
     }
     
     public ArrayList<ProdutosDTO> listarProdutos(){
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<ProdutosDTO> produtos = new ArrayList<>();
+        conn = new conectaDAO().connectDB();
         
-        return listagem;
-    }
-    
-    
-    
-        
-}
+        try {
+            String query = "SELECT * FROM produtos";
+            pst = conn.prepareStatement(query);
+            rs = pst.executeQuery();
 
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                int valor = rs.getInt("valor");
+                String status = rs.getString("status");
+                ProdutosDTO prod = new ProdutosDTO(id, nome, valor, status);
+                produtos.add(prod);
+            }
+            
+            return produtos;
+        } catch (SQLException ex) {
+            System.out.println("Falha ao consultar produtos " + ex.getMessage());
+            return null;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pst != null) {
+                    pst.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Erro ao fechar recursos " + e.getMessage());
+            }
+        }
+    }           
+}
